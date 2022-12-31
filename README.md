@@ -1,3 +1,27 @@
+### Important
+
+Forked from andrebrait's 1g1r-romset-generator. The goal is to add small functionalities to increase the level of customization of the excellent tool created by andrebrait
+
+### Changes so far
+
+v1.0.0
+
+- USA, EUR and JPN regions were separated from WORLD region, which is now fully independent as WOR.
+Now a USA game can have priority over a World game.
+Example:
+python3 generate.py -r USA,WOR,SPA,EUR,NZ,UK,JPN
+
+- Scandinavia region added (SCA).
+Example:
+python3 generate.py -r USA,WOR,SPA,EUR,SCA
+
+- Added bad dump rom filter.
+Example:
+python3 generate.py -r USA,WOR,SPA,EUR,NZ,UK,JPN -l en,es,ja --no-bad --all-regions
+(--no-bad filter is also included in --no-all as well.)
+
+- Documentation updated to reflect changes.
+
 ### 1G1R ROM set generator
 
 A small utility written in Python that uses No-Intro DATs to generate 1G1R ROM sets
@@ -59,6 +83,7 @@ Options:
         --no-aftermarket        Filter out aftermarket ROMs
         --no-homebrew           Filter out homebrew ROMs
         --no-promo              Filter out promotion ROMs
+        --no-bad                Filter out bad dump Roms
         --no-all                Apply all filters above (WILL STILL ALLOW UNLICENSED ROMs)
         --no-unlicensed         Filter out unlicensed ROMs
         --all-regions           Includes files of unselected regions, if a selected one is not available
@@ -123,10 +148,12 @@ Single region codes and respective usual languages (not exhaustive):
         - (New Zealand) - NZ, en;
         - (Portugal) - POR, pt;
         - (Russia) - RUS, ru;
+        - (Scandinavia) - SCA, en;
         - (Spain) - SPA, es;
         - (Sweden) - SWE, sv;
         - (Taiwan) - TAI, zh;
         - (United Kingdom) - UK, en;
+        - (World) - WOR, en;
 ```
 
 ```
@@ -136,7 +163,6 @@ Multi/Major region codes:
         - (United States/USA) - USA, en;
         - (Japan) - JPN, ja;
         - (Unknow) - UNK,
-        - (World) - EUR or USA or JPN.
  ```
  
 About avaliable languages, the same methodology mentioned above is applied - but usually abranges a very widely range of possibilities, since a game targeted to specific region can cover a variety of languages on the same ROM, as part of it's original code. To this, please refeer to [ISO 639-1 Code List](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
