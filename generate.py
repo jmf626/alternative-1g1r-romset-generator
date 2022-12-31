@@ -21,7 +21,7 @@ from modules.header import Rule
 from modules.utils import get_index, check_in_pattern_list, to_int_list, \
     add_padding, get_or_default, available_columns, trim_to, is_valid
 
-__version__ = '1.9.12-SNAPSHOT'
+__version__ = '1.0.0'
 
 PROGRESSBAR: Optional[MultiThreadedProgressBar] = None
 
@@ -58,13 +58,13 @@ COUNTRY_REGION_CORRELATION = [
     RegionData('CAN', re.compile(r'(Canada)', re.IGNORECASE), ['en', 'fr']),
     RegionData('CHN', re.compile(r'(China)', re.IGNORECASE),['zh']),
     RegionData('DAN', re.compile(r'(Denmark)', re.IGNORECASE), ['da']),
-    RegionData('EUR', re.compile(r'((Europe)|(World))', re.IGNORECASE), ['en']),
+    RegionData('EUR', re.compile(r'((Europe))', re.IGNORECASE), ['en']),
     RegionData('FRA', re.compile(r'(France)', re.IGNORECASE), ['fr']),
     RegionData('FYN', re.compile(r'(Finland)', re.IGNORECASE), ['fi']),
     RegionData('GER', re.compile(r'(Germany)', re.IGNORECASE), ['de']),
     RegionData('GRE', re.compile(r'(Greece)', re.IGNORECASE), ['el']),
     RegionData('ITA', re.compile(r'(Italy)', re.IGNORECASE), ['it']),
-    RegionData('JPN', re.compile(r'((Japan)|(World))', re.IGNORECASE), ['ja']),
+    RegionData('JPN', re.compile(r'((Japan))', re.IGNORECASE), ['ja']),
     RegionData('HK', re.compile(r'(Hong Kong)', re.IGNORECASE), ['zh']),
     RegionData('HOL', re.compile(r'(Netherlands)', re.IGNORECASE), ['nl']),
     RegionData('KOR', re.compile(r'(Korea)', re.IGNORECASE), ['ko']),
@@ -74,12 +74,14 @@ COUNTRY_REGION_CORRELATION = [
     RegionData('POR', re.compile(r'(Portugal)', re.IGNORECASE), ['pt']),
     RegionData('RUS', re.compile(r'(Russia)', re.IGNORECASE), ['ru']),
     RegionData('SPA', re.compile(r'(Spain)', re.IGNORECASE), ['es']),
+    RegionData('SCA', re.compile(r'(Scandinavia)', re.IGNORECASE), ['en']),
     # Language needs checking
     RegionData('TAI', re.compile(r'(Taiwan)', re.IGNORECASE), ['zh']),
     RegionData('SWE', re.compile(r'(Sweden)', re.IGNORECASE), ['sv']),
     RegionData('UK', re.compile(r'(United Kingdom)', re.IGNORECASE), ['en']),
-    RegionData('USA', re.compile(r'((USA)|(World))', re.IGNORECASE), ['en']),
-    RegionData('UNK', re.compile(r'(Unknown)', re.IGNORECASE), ['en'])
+    RegionData('USA', re.compile(r'((USA))', re.IGNORECASE), ['en']),
+    RegionData('UNK', re.compile(r'(Unknown)', re.IGNORECASE), ['en']),
+    RegionData('WOR', re.compile(r'((World))', re.IGNORECASE), ['en'])
 ]
 
 SECTIONS_REGEX = re.compile(r'\(([^()]+)\)')
@@ -217,6 +219,7 @@ def parse_games(
         filter_beta: bool,
         filter_demo: bool,
         filter_sample: bool,
+        filter_bad: bool,
         exclude: List[Pattern]) -> Dict[str, List[GameEntry]]:
     games = {}
     root = datafile.parse(file, silence=True)
@@ -231,6 +234,8 @@ def parse_games(
         if filter_unlicensed and UNL_REGEX.search(game.name):
             continue
         if filter_pirate and PIRATE_REGEX.search(game.name):
+            continue
+        if filter_bad and BAD_REGEX.search(game.name):
             continue
         if filter_aftermarket and AFTERMARKET_REGEX.search(game.name):
             continue
@@ -550,6 +555,7 @@ def main(argv: List[str]):
     filter_enhancement_chip = False
     filter_unlicensed = False
     filter_pirate = False
+    filter_bad = False
     filter_aftermarket = False
     filter_homebrew = False
     filter_promo = False
@@ -621,6 +627,7 @@ def main(argv: List[str]):
         filter_demo |= opt in ('--no-demo', '--no-all')
         filter_sample |= opt in ('--no-sample', '--no-all')
         filter_pirate |= opt in ('--no-pirate', '--no-all')
+        filter_bad |= opt in ('--no-bad', '--no-all')
         filter_aftermarket |= opt in ('--no-aftermarket', '--no-all')
         filter_homebrew |= opt in ('--no-homebrew', '--no-all')
         filter_promo |= opt in ('--no-promo', '--no-all')
@@ -756,6 +763,7 @@ def main(argv: List[str]):
         filter_program,
         filter_enhancement_chip,
         filter_pirate,
+        filter_bad,
         filter_aftermarket,
         filter_homebrew,
         filter_promo,
@@ -1206,6 +1214,9 @@ def help_msg(s: Optional[Union[str, Exception]] = None) -> str:
 
         '\t--no-pirate\t\t'
         'Filter out pirate ROMs',
+        
+        '\t--no-bad\t\t'
+        'Filter out bad ROMs',
 
         '\t--no-aftermarket\t\t'
         'Filter out aftermarket ROMs',
