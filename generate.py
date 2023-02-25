@@ -21,7 +21,7 @@ from modules.header import Rule
 from modules.utils import get_index, check_in_pattern_list, to_int_list, \
     add_padding, get_or_default, available_columns, trim_to, is_valid
 
-__version__ = '1.0.0'
+__version__ = '1.0.1
 
 PROGRESSBAR: Optional[MultiThreadedProgressBar] = None
 
@@ -211,6 +211,7 @@ def parse_games(
         filter_program: bool,
         filter_enhancement_chip: bool,
         filter_pirate: bool,
+        filter_bad: bool,
         filter_aftermarket: bool,
         filter_homebrew: bool,
         filter_promo: bool,
@@ -219,7 +220,6 @@ def parse_games(
         filter_beta: bool,
         filter_demo: bool,
         filter_sample: bool,
-        filter_bad: bool,
         exclude: List[Pattern]) -> Dict[str, List[GameEntry]]:
     games = {}
     root = datafile.parse(file, silence=True)
@@ -507,6 +507,7 @@ def main(argv: List[str]):
             'no-sample',
             'no-proto',
             'no-pirate',
+            'no-bad',
             'no-aftermarket',
             'no-homebrew',
             'no-promo',
@@ -789,6 +790,7 @@ def main(argv: List[str]):
             (filter_sample, 'Samples'),
             (filter_unlicensed, 'Unlicensed ROMs'),
             (filter_pirate, 'Pirate ROMs'),
+            (filter_bad, 'Bad ROMs'),
             (filter_aftermarket, 'Aftermarket ROMs'),
             (filter_homebrew, 'Homebrew ROMs'),
             (filter_promo, 'Promo ROMs'),
