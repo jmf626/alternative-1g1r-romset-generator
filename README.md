@@ -4,6 +4,10 @@ Forked from andrebrait's 1g1r-romset-generator. The goal is to add small functio
 
 ### Changes so far
 
+v1.0.1
+
+- Fixed conflict with -bad filter.
+
 v1.0.0
 
 - USA, EUR and JPN regions were separated from WORLD region, which is now fully independent as WOR.
